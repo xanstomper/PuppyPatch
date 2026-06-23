@@ -3,10 +3,11 @@
 //
 // Usage:
 //
-//	redshark                       # start interactive TUI
-//	redshark --scope scope.json # start with a preloaded scope
-//	redshark --version          # print version
-//	redshark --help             # print usage
+//	redshark                       # start interactive TUI with stub provider
+//	redshark --provider openai     # use real OpenAI-compatible endpoint
+//	redshark --scope scope.json   # start with a preloaded scope
+//	redshark --version            # print version
+//	redshark --help               # print usage
 package main
 
 import (
@@ -14,24 +15,64 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
-	"charm.land/bubbletea/v2"
+	tea "charm.land/bubbletea/v2"
 
 	"github.com/xanstomper/redteam-agent/internal/agent"
+	"github.com/xanstomper/redteam-agent/internal/agent/openai_provider"
 	"github.com/xanstomper/redteam-agent/internal/agent/stubprovider"
 	"github.com/xanstomper/redteam-agent/internal/agent/tools"
 	"github.com/xanstomper/redteam-agent/internal/evidence"
 	"github.com/xanstomper/redteam-agent/internal/msg"
+	"github.com/xanstomper/redteam-agent/internal/pybridge"
 	"github.com/xanstomper/redteam-agent/internal/scope"
 	"github.com/xanstomper/redteam-agent/internal/ui/logo"
 	"github.com/xanstomper/redteam-agent/internal/ui/model"
 	"github.com/xanstomper/redteam-agent/internal/version"
 )
 
+// Provider name constants exposed via --provider.
+const (
+	providerStub   = "stub"
+	providerOpenAI = "openai"
+)
+
+// apiOpenAIDefault matches openai_provider.defaultAPIBase and is surfaced as
+// a startup warning when REDSHARK_API_BASE is unset.
+const apiOpenAIDefault = "https://api.openai.com/v1"
+
+// resolveProviderName normalises an empty flag value to the stub default.
+func resolveProviderName(name string) string {
+	if strings.TrimSpace(name) == "" {
+		return providerStub
+	}
+	return name
+}
+
+// buildProvider constructs the LLM provider named by --provider. Returns an
+// error for unknown identifiers so flag validation happens at startup rather
+// than on first turn.
+func buildProvider(name string) (agent.Provider, error) {
+	switch name {
+	case providerStub:
+		return &stubprovider.StubProvider{}, nil
+	case providerOpenAI:
+		provider := openai_provider.NewOpenAIProvider()
+		if strings.TrimSpace(os.Getenv("REDSHARK_API_BASE")) == "" {
+			fmt.Fprintf(os.Stderr, "warning: REDSHARK_API_BASE unset; using %s\n", apiOpenAIDefault)
+		}
+		return provider, nil
+	default:
+		return nil, fmt.Errorf("unknown --provider %q (expected: stub, openai)", name)
+	}
+}
+
 func main() {
 	scopePath := flag.String("scope", "", "path to engagement scope JSON file")
 	evidenceDir := flag.String("evidence", "", "directory for evidence chain (default: ./evidence-<scope-id>)")
+	providerFlag := flag.String("provider", providerStub, "LLM provider: stub (default, no key needed) or openai (REDSHARK_API_KEY)")
 	showVersion := flag.Bool("version", false, "print version and exit")
 	flag.Parse()
 
@@ -39,6 +80,14 @@ func main() {
 		fmt.Println(version.String())
 		os.Exit(0)
 	}
+
+	providerName := resolveProviderName(*providerFlag)
+	provider, err := buildProvider(providerName)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Fprintf(os.Stderr, "provider: %s\n", providerName)
 
 	// Print splash.
 	fmt.Fprintln(os.Stderr, logo.Render(80))
@@ -84,7 +133,28 @@ func main() {
 		Evidence: evStore,
 		MaxOut:   tools.MaxOutputBytes,
 	}
-	toolRegistry := tools.Registry(deps)
+
+	// Optional: start Python bridge for LLM red-team tools (deepteam, benchmark).
+	// If Python or deepteam are not installed, the bridge fails to start and we
+	// gracefully fall back to the Go-only registry.
+	bridge := &pybridge.Bridge{}
+	bridgeCtx, bridgeCancel := context.WithTimeout(context.Background(), 20*1e9)
+	if err := bridge.Start(bridgeCtx); err != nil {
+		fmt.Fprintf(os.Stderr, "python bridge not available: %v\n", err)
+		fmt.Fprintf(os.Stderr, "LLM red-team tools (deepteam/benchmark/guardrails) disabled — running Go-only toolset\n")
+		bridge = nil
+	} else {
+		fmt.Fprintf(os.Stderr, "python bridge started: %s\n", bridge.URL())
+		defer bridge.Stop()
+	}
+	bridgeCancel()
+
+	var toolRegistry *tools.RegistryHandle
+	if bridge != nil {
+		toolRegistry = tools.RegistryWithBridge(deps, bridge)
+	} else {
+		toolRegistry = tools.Registry(deps)
+	}
 
 	// Create session.
 	session := &msg.Session{
@@ -93,9 +163,6 @@ func main() {
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
-
-	// Create provider (stub for skeleton; replace with real LLM provider).
-	provider := &stubprovider.StubProvider{}
 
 	// Wire coordinator. Pass the registry's tool list to the coordinator
 	// (named-dispatch via .Call is also available on the handle but the

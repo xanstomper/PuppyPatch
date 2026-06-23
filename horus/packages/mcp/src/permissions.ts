@@ -1,1 +1,0 @@
-export function canUseMCP(agentPermissions:string[], serverPermission:string){return agentPermissions.includes('admin')||agentPermissions.includes(serverPermission)||agentPermissions.includes('mcp')}

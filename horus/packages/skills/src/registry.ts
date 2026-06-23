@@ -1,2 +1,0 @@
-import fs from 'node:fs'; import path from 'node:path'; import { SkillSchema, type Skill } from './schema.js';
-export class SkillRegistry{constructor(public dir='.horus/skills'){fs.mkdirSync(dir,{recursive:true})} save(skill:Skill){const p=path.join(this.dir,`${skill.name.toLowerCase().replace(/\s+/g,'-')}.json`); fs.writeFileSync(p,JSON.stringify(skill,null,2)); return p} list(){return fs.readdirSync(this.dir).filter(f=>f.endsWith('.json')).map(f=>SkillSchema.parse(JSON.parse(fs.readFileSync(path.join(this.dir,f),'utf8'))))}}

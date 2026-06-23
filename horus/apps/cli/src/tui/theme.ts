@@ -1,1 +1,0 @@
-export const theme = { black: '#000000', panel: '#050505', border: '#242424', text: '#e7e5e4', muted: '#737373', gold: '#c9a227', violet: '#8b5cf6', cyan: '#22d3ee', green: '#22c55e', red: '#ef4444' };

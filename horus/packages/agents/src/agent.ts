@@ -1,2 +1,0 @@
-import { eventBus } from '@horus/core';
-export class CodingAgent{async run(prompt:string){eventBus.emitEvent({type:'task',action:'new',content:prompt}); eventBus.emitEvent({type:'task',action:'plan',content:'inspect repo, build spec, execute safe tools, verify'}); eventBus.emitEvent({type:'task',action:'done',content:'run complete'}); return {prompt,final:'Task planned and executed through TypeScript Horus runtime.'}}}

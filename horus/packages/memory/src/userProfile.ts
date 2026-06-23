@@ -1,3 +1,0 @@
-import type { UserPreference } from '@horus/shared';
-import fs from 'node:fs'; import path from 'node:path';
-export class UserProfileStore { constructor(public file='.horus/user-profile.json'){fs.mkdirSync(path.dirname(file),{recursive:true})} all():UserPreference[]{ if(!fs.existsSync(this.file)) return []; return JSON.parse(fs.readFileSync(this.file,'utf8')); } upsert(pref:UserPreference){const all=this.all().filter(p=>p.key!==pref.key); all.push(pref); fs.writeFileSync(this.file,JSON.stringify(all,null,2)); return pref;} delete(key:string){const all=this.all().filter(p=>p.key!==key); fs.writeFileSync(this.file,JSON.stringify(all,null,2));} inspect(){return this.all().sort((a,b)=>b.confidence-a.confidence)} }

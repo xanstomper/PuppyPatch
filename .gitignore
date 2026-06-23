@@ -1,0 +1,10 @@
+puppypatch
+crush.json
+puppypatch.json
+internal/ui/notification/puppypatch-icon-solo.png
+go.mod.bak
+*.test
+*.out
+.idea/
+.vscode/
+*.swp

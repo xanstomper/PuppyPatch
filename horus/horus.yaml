@@ -1,0 +1,26 @@
+models:
+  default: openrouter:anthropic/claude-sonnet-4.5
+  routes:
+    planner: openai:gpt-5.1
+    coder: openrouter:qwen/qwen-coder
+    reviewer: nvidia:nemotron
+    summarizer: kimi:k2
+agents:
+  max_concurrent: 60
+  default_timeout_minutes: 45
+memory:
+  sqlite_path: .horus/memory.db
+  fts: true
+  vector: true
+  encryption: optional
+mcp:
+  servers:
+    filesystem:
+      command: mcp-filesystem
+      permissions: read-write
+    github:
+      command: mcp-github
+      permissions: issues-prs
+permissions:
+  default: [read-only]
+  require_approval: [destructive, deploy, secrets, admin]

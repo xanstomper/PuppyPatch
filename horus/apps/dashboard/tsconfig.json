@@ -1,0 +1,3 @@
+{
+  "compilerOptions": {"jsx":"preserve", "strict":true, "moduleResolution":"bundler", "allowJs":true, "target":"ES2022"}
+}

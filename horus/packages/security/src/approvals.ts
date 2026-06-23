@@ -1,0 +1,2 @@
+export type Approval = {id:string; reason:string; createdAt:number; status:'pending'|'approved'|'denied'};
+export class ApprovalQueue { approvals:Approval[]=[]; request(reason:string){const a={id:crypto.randomUUID(),reason,createdAt:Date.now(),status:'pending' as const}; this.approvals.push(a); return a;} decide(id:string,status:'approved'|'denied'){const a=this.approvals.find(x=>x.id===id); if(a) a.status=status; return a;} }

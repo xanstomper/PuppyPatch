@@ -1,0 +1,139 @@
+{
+  "cwe_top_25": [
+    {
+      "id": "CWE-79",
+      "name": "Cross-site Scripting (XSS)",
+      "description": "Improper neutralization of input during web page generation"
+    },
+    {
+      "id": "CWE-89",
+      "name": "SQL Injection",
+      "description": "Improper neutralization of special elements used in SQL commands"
+    },
+    {
+      "id": "CWE-78",
+      "name": "OS Command Injection",
+      "description": "Improper neutralization of special elements used in OS commands"
+    },
+    {
+      "id": "CWE-22",
+      "name": "Path Traversal",
+      "description": "Improper limitation of a pathname to a restricted directory"
+    },
+    {
+      "id": "CWE-269",
+      "name": "Privilege Escalation",
+      "description": "Improper management of privileges"
+    },
+    {
+      "id": "CWE-287",
+      "name": "Authentication Bypass",
+      "description": "Improper authentication"
+    },
+    {
+      "id": "CWE-200",
+      "name": "Information Exposure",
+      "description": "Exposure of sensitive information"
+    },
+    {
+      "id": "CWE-502",
+      "name": "Deserialization of Untrusted Data",
+      "description": "Deserialization of untrusted data without validation"
+    },
+    {
+      "id": "CWE-918",
+      "name": "Server-Side Request Forgery (SSRF)",
+      "description": "Server-side request forgery"
+    },
+    {
+      "id": "CWE-77",
+      "name": "Command Injection",
+      "description": "Improper neutralization of special elements"
+    }
+  ],
+  "owasp_llm_top_10": [
+    {
+      "id": "LLM01",
+      "name": "Prompt Injection",
+      "description": "Direct and indirect prompt injection attacks"
+    },
+    {
+      "id": "LLM02",
+      "name": "Sensitive Information Disclosure",
+      "description": "LLM leaking sensitive data in outputs"
+    },
+    {
+      "id": "LLM03",
+      "name": "Supply Chain Vulnerabilities",
+      "description": "Vulnerable components in LLM supply chain"
+    },
+    {
+      "id": "LLM04",
+      "name": "Data Poisoning",
+      "description": "Training data manipulation"
+    },
+    {
+      "id": "LLM05",
+      "name": "Insecure Output Handling",
+      "description": "Insufficient validation of LLM outputs"
+    },
+    {
+      "id": "LLM06",
+      "name": "Excessive Agency",
+      "description": "LLM granted too much autonomy"
+    },
+    {
+      "id": "LLM07",
+      "name": "System Prompt Leakage",
+      "description": "Leakage of system prompts and instructions"
+    },
+    {
+      "id": "LLM08",
+      "name": "Vector & Embedding Weaknesses",
+      "description": "Attacks on RAG and embedding systems"
+    },
+    {
+      "id": "LLM09",
+      "name": "Misinformation",
+      "description": "LLM generating false or misleading content"
+    },
+    {
+      "id": "LLM10",
+      "name": "Model Denial of Service",
+      "description": "Resource exhaustion attacks on LLMs"
+    }
+  ],
+  "attack_techniques": {
+    "reconnaissance": [
+      "Target infrastructure discovery",
+      "Model architecture fingerprinting",
+      "API endpoint mapping",
+      "Guardail detection & classification",
+      "Content filter probing"
+    ],
+    "initial_access": [
+      "Direct prompt injection",
+      "Indirect prompt injection (via RAG/docs)",
+      "Plugin/tool command injection",
+      "Supply chain compromise of dependencies"
+    ],
+    "persistence": [
+      "Session hijacking",
+      "Conversation poisoning",
+      "Backdoored fine-tuned models"
+    ],
+    "defense_evasion": [
+      "Encoding-based bypass (base64, hex, leetspeak)",
+      "Token smuggling via Unicode",
+      "Role-playing and persona exploitation",
+      "Context window flooding",
+      "Multi-turn distributed attacks",
+      "Homoglyph and typo attacks"
+    ],
+    "exfiltration": [
+      "Prompted data leakage via output",
+      "Tool-based data exfiltration (file writes, URLs)",
+      "Side-channel via timing/error messages"
+    ]
+  }
+}

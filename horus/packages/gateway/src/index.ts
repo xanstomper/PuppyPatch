@@ -1,0 +1,2 @@
+export type Platform='telegram'|'discord'|'slack'|'whatsapp'|'signal'|'email'|'cli';
+export class Gateway{home=new Map<string,Platform>(); messages:{platform:Platform;userId:string;text:string}[]=[]; setHome(userId:string,platform:Platform){this.home.set(userId,platform)} send(platform:Platform,userId:string,text:string){this.messages.push({platform,userId,text})} command(platform:Platform,userId:string,text:string){if(text.startsWith('/sethome'))this.setHome(userId,platform); return {ok:true,platform,userId,text}}}

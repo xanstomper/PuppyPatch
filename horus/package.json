@@ -1,0 +1,33 @@
+{
+  "name": "horus",
+  "version": "0.3.0-core-mvp",
+  "private": true,
+  "description": "Horus by Aporia — TypeScript React Ink terminal coding agent Core MVP",
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "horus": "tsx apps/cli/src/index.ts",
+    "dev": "tsx apps/cli/src/index.ts tui",
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "chalk": "latest",
+    "commander": "latest",
+    "diff": "latest",
+    "execa": "latest",
+    "ink": "latest",
+    "ink-text-input": "latest",
+    "react": "latest",
+    "simple-git": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

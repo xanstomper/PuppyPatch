@@ -1,0 +1,2 @@
+import React from 'react'; import { Box, Text } from 'ink'; import { SlashCommands } from '@horus/shared';
+export function SlashCommandMenu({query}:{query:string}){ if(!query.startsWith('/')) return null; return <Box flexDirection="column" borderStyle="single" borderColor="gray" paddingX={1}>{SlashCommands.filter(c=>c.startsWith(query as any)).map(c=><Text key={c} color="violet">{c}</Text>)}</Box> }

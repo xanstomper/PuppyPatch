@@ -1,0 +1,7 @@
+services:
+  horus:
+    build: .
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: horus doctor

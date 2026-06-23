@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "horus-aporia"
+version = "0.1.0"
+description = "Horus by Aporia: self-improving multi-agent coding operating system"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Aporia"}]
+dependencies = ["typer>=0.12.0", "rich>=13.7.0", "pydantic>=2.7.0", "pyyaml>=6.0.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+gateway = ["fastapi>=0.110.0", "uvicorn>=0.29.0"]
+tui = ["textual>=0.58.0"]
+all = ["horus-aporia[dev,gateway,tui]"]
+
+[project.scripts]
+horus = "horus_cli.main:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["horus", "apps/cli/horus_cli", "apps/gateway/horus_gateway"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "apps/cli", "apps/gateway"]
+

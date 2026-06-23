@@ -1,0 +1,9 @@
+{
+    "agents": [
+        ".opencode/agents/RedTeamer.md"
+    ],
+    "provider": {
+        "name": "auto",
+        "api": "auto"
+    }
+}

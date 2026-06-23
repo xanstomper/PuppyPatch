@@ -1,0 +1,3 @@
+export type BackendName='local'|'docker'|'ssh'|'singularity'|'modal'|'daytona'|'vercel-sandbox'|'kubernetes'|'github-actions'|'custom';
+export type BackendHealth={name:BackendName;healthy:boolean;detail:string};
+export class BackendManager{active:BackendName='local'; list():BackendName[]{return ['local','docker','ssh','singularity','modal','daytona','vercel-sandbox','kubernetes','github-actions','custom']} set(name:BackendName){this.active=name} doctor(name=this.active):BackendHealth{return {name,healthy:true,detail:'adapter configured'}} start(){return {backend:this.active,status:'started'}} stop(){return {backend:this.active,status:'stopped'}} logs(){return `${this.active}: no logs yet`}}

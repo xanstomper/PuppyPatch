@@ -1,0 +1,13 @@
+import React from 'react'; import { Text } from 'ink';
+export const ModelRoutePanel=()=> <Text>planner/coder/reviewer routes configured</Text>;
+export const ContextMeter=()=> <Text color="gray">context: 0%</Text>;
+export const MCPStatusPanel=()=> <Text color="cyan">MCP ready</Text>;
+export const AgentStatusPanel=()=> <Text color="green">agents: 0/60</Text>;
+export const TodoPanel=()=> <Text>todos: none</Text>;
+export const MemorySkillsPanel=()=> <Text>memory + skills online</Text>;
+export const SystemPanel=()=> <Text>system: safe</Text>;
+export const ToolOutputBlock=({text}:{text:string})=> <Text color="green">tool: {text}</Text>;
+export const DiffBlock=({diff}:{diff:string})=> <Text color="cyan">{diff}</Text>;
+export const ApprovalPrompt=({reason}:{reason:string})=> <Text color="yellow">approval required: {reason}</Text>;
+export const ErrorBlock=({message}:{message:string})=> <Text color="red">error: {message}</Text>;
+export const StreamingLine=({text}:{text:string})=> <Text>{text}</Text>;

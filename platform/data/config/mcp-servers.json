@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "python3",
+      "args": ["-m", "mcp_obsidian", "--vault", "/home/jewboy420/redteam-brain"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
